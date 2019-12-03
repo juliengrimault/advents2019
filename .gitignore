@@ -1,0 +1,20 @@
+#xcode noise
+*.mode1v3
+*.pbxuser
+*.perspective 
+*.perspectivev3
+*.pyc 
+*~.nib/
+build/*
+xcuserdata
+.idea/
+xcshareddata
+.build
+.swiftpm
+
+# osx noise
+.DS_Store
+profile
+*~
+.*.swp
+lldb/module_cache/*
