@@ -1,11 +1,13 @@
 import Day1
 import Day2
+import Day3
 import Foundation
 
 enum Option: String, Equatable {
     case day1
     case day2
     case day2Part2
+    case day3
 }
 
 let args = CommandLine.arguments.dropFirst()
@@ -40,5 +42,14 @@ case .day1:
         let result = noun * 100 + verb
         print("Day 2 - part 2 result: \(result)")
 
-    
+    case .day3:
+        guard let board = Board.makeFromInput(day3Input) else {
+            print("bad input")
+            exit(1)
+        }
+        
+        let distance = board.closestIntersectionDistance
+        print("Day 3 - closest intersection distance: \(String(describing:distance))")
+        let time = board.fastestIntersection
+        print("Day 3 - fastest intersection: \(String(describing:time))")
 }
