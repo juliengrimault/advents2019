@@ -2,6 +2,7 @@ import Day1
 import Day2
 import Day3
 import Day4
+import Day5
 import Foundation
 
 enum Option: String, Equatable {
@@ -10,6 +11,7 @@ enum Option: String, Equatable {
     case day2Part2
     case day3
     case day4
+    case day5
 }
 
 let args = CommandLine.arguments.dropFirst()
@@ -29,12 +31,12 @@ case .day1:
     print("fuel required: \(f)")
 
     case .day2:
-        let p = try Program(codes: program1).restoredTo1202ProgramAlarm()
+        let p = try LegacyProgram(codes: program1).restoredTo1202ProgramAlarm()
         let endProgram = try p.afterRunning()
         print("Day 2 result: \(endProgram.output)")
 
     case .day2Part2:
-        let p = Program(codes: program2)
+        let p = LegacyProgram(codes: program2)
         let solver = ProgramSolver(program: p)
         guard let (noun, verb) = try solver.solve(for: 19690720) else {
             print("no solution found :(")
@@ -63,4 +65,12 @@ case .day1:
         let generator2 = PasswordGenerator(range: 206938...679128, valid: isValid2)
         let count2 = generator2.reduce(0) { acc, _ in acc + 1 }
         print("Day 4 part 2 - number of passwords: \(count2)")
+
+    case .day5:
+        var program = Program(memory: programDay5, io: .values(input: [1], output: IO.stdout))
+        program.run()
+
+        var program2 = Program(memory: programDay5, io: .values(input: [5], output: IO.stdout))
+        program2.run()
+
 }

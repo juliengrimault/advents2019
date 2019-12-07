@@ -1,10 +1,10 @@
 import Foundation
 
 public struct ProgramSolver {
-    public var program: Program
+    public var program: LegacyProgram
     public var inputs: (Range<Int>, Range<Int>)
 
-    public init(program: Program, inputs: (Range<Int>, Range<Int>) =  (0..<100, 0..<100)) {
+    public init(program: LegacyProgram, inputs: (Range<Int>, Range<Int>) =  (0..<100, 0..<100)) {
         self.program = program
         self.inputs = inputs
     }

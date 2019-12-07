@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Program {
+public struct LegacyProgram {
     public var codes: [Int]
 
     public init(codes: [Int]) {
@@ -14,8 +14,8 @@ enum OpCode: Int {
     case halt = 99
 }
 
-extension Program {
-    public func afterRunning() throws -> Program {
+extension LegacyProgram {
+    public func afterRunning() throws -> LegacyProgram {
         var copy = self
         try copy.run()
         return copy
@@ -57,57 +57,57 @@ extension Program {
         let v = try value(at: index)
 
         guard let code = OpCode(rawValue: v) else {
-            throw Program.Error.unknownOpCode(v)
+            throw LegacyProgram.Error.unknownOpCode(v)
         }
 
         return code
     }
 }
 
-extension Program {
+extension LegacyProgram {
     public func value(at index: Int) throws -> Int {
         guard index >= codes.startIndex && index < codes.endIndex else {
-            throw Program.Error.outOfBound(index)
+            throw LegacyProgram.Error.outOfBound(index)
         }
         return codes[index]
     }
 
     public mutating func setValue(value: Int, at index: Int) throws {
         guard index >= codes.startIndex && index < codes.endIndex else {
-            throw Program.Error.outOfBound(index)
+            throw LegacyProgram.Error.outOfBound(index)
         }
         codes[index] = value
     }
 }
 
 
-extension Program {
+extension LegacyProgram {
     public enum Error: Swift.Error {
         case outOfBound(Int)
         case unknownOpCode(Int)
     }
 }
 
-extension Program {
+extension LegacyProgram {
     public mutating func seed(_ input: (Int, Int)) throws {
         try setValue(value: input.0, at: 1)
         try setValue(value: input.1, at: 2)
     }
 
-    public func seeded(_ input: (Int, Int)) throws -> Program {
+    public func seeded(_ input: (Int, Int)) throws -> LegacyProgram {
         var copy = self
         try copy.seed(input)
         return copy
     }
 }
 
-extension Program {
-    public func restoredTo1202ProgramAlarm() throws -> Program {
+extension LegacyProgram {
+    public func restoredTo1202ProgramAlarm() throws -> LegacyProgram {
         return try seeded((12, 2))
     }
 }
 
-extension Program {
+extension LegacyProgram {
     public var output: Int {
         return codes[0]
     }
