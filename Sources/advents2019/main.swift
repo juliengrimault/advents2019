@@ -1,6 +1,7 @@
 import Day1
 import Day2
 import Day3
+import Day4
 import Foundation
 
 enum Option: String, Equatable {
@@ -8,6 +9,7 @@ enum Option: String, Equatable {
     case day2
     case day2Part2
     case day3
+    case day4
 }
 
 let args = CommandLine.arguments.dropFirst()
@@ -52,4 +54,13 @@ case .day1:
         print("Day 3 - closest intersection distance: \(String(describing:distance))")
         let time = board.fastestIntersection
         print("Day 3 - fastest intersection: \(String(describing:time))")
+
+    case .day4:
+        let generator = PasswordGenerator(range: 206938...679128, valid: isValid)
+        let count = generator.reduce(0) { acc, _ in acc + 1 }
+        print("Day 4 - number of passwords: \(count)")
+
+        let generator2 = PasswordGenerator(range: 206938...679128, valid: isValid2)
+        let count2 = generator2.reduce(0) { acc, _ in acc + 1 }
+        print("Day 4 part 2 - number of passwords: \(count2)")
 }
