@@ -16,7 +16,7 @@ let package = Package(
     targets: [
         .target(
             name: "advents2019",
-            dependencies: ["Day1", "Day2", "Day3", "Day4", "Day5", "Day6"]),
+            dependencies: ["Day1", "Day2", "Day3", "Day4", "Day5", "Day6", "Day7"]),
         .target(
             name: "Day1",
             dependencies: []),
@@ -50,5 +50,11 @@ let package = Package(
         .testTarget(
             name: "Day6Tests",
             dependencies: ["Day6"]),
+        .target(
+            name: "Day7",
+            dependencies: ["Day5"]),
+        .testTarget(
+            name: "Day7Tests",
+            dependencies: ["Day7"]),
     ]
 )

@@ -5,8 +5,8 @@ public typealias Memory = [Int]
 typealias Address = Int
 
 public struct Program {
-    var memory: Memory
-    var io: IO
+    public var memory: Memory
+    public var io: IO
 
     public init(memory: Memory, io: IO = .interractive) {
         self.memory = memory

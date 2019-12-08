@@ -13,10 +13,11 @@ public struct IO {
 
 extension IO {
     public static var interractive: IO {
-        return IO(input: IO.stdin, output: IO.stdout)
+        let output = MultiplexOutput(IO.stdout, StoreOutput())
+        return IO(input: IO.stdin, output: output)
     }
 
-    public static func values(input: [Int], output: Output) -> IO {
+    public static func values(input: [Int], output: Output = MultiplexOutput(IO.stdout, StoreOutput())) -> IO {
         return IO(input: ArbitraryInput(values: input), output: output)
     }
 }
@@ -34,7 +35,7 @@ public protocol Output {
 /// Mark - Input Implementations
 
 extension IO {
-    public static var stdin: Input {
+    public static var stdin: STDIN {
         return STDIN()
     }
 }
@@ -71,7 +72,7 @@ public struct ArbitraryInput: Input {
 /// Mark - Output Implementation
 
 extension IO {
-    public static var stdout: Output {
+    public static var stdout: STDOUT {
         return STDOUT()
     }
 }
@@ -94,7 +95,7 @@ public struct StoreOutput: Output {
     }
 }
 
-public struct MultiplexOutput<O1, O2> where O1: Output, O2: Output {
+public struct MultiplexOutput<O1, O2>: Output where O1: Output, O2: Output {
     public var output1: O1
     public var output2: O2
 
@@ -103,7 +104,7 @@ public struct MultiplexOutput<O1, O2> where O1: Output, O2: Output {
         self.output2 = o2
     }
 
-    mutating func write(_ value: Int) {
+    mutating public func write(_ value: Int) {
         output1.write(value)
         output2.write(value)
      }

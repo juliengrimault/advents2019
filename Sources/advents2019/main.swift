@@ -4,6 +4,7 @@ import Day3
 import Day4
 import Day5
 import Day6
+import Day7
 import Foundation
 
 enum Option: String, Equatable {
@@ -14,6 +15,7 @@ enum Option: String, Equatable {
     case day4
     case day5
     case day6
+    case day7
 }
 
 let args = CommandLine.arguments.dropFirst()
@@ -69,10 +71,10 @@ case .day1:
         print("Day 4 part 2 - number of passwords: \(count2)")
 
     case .day5:
-        var program = Program(memory: programDay5, io: .values(input: [1], output: IO.stdout))
+        var program = Program(memory: programDay5, io: .values(input: [1]))
         program.run()
 
-        var program2 = Program(memory: programDay5, io: .values(input: [5], output: IO.stdout))
+        var program2 = Program(memory: programDay5, io: .values(input: [5]))
         program2.run()
 
     case .day6:
@@ -92,5 +94,7 @@ case .day1:
         }
         print("number of transfers required: \(path.count - 1)")
 
-
+    case .day7:
+        let max = maxOutput(for: programDay7, numberOfAmplifier: 5)
+        print("max thrust: \(String(describing: max))")
 }
