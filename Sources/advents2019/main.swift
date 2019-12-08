@@ -76,6 +76,21 @@ case .day1:
         program2.run()
 
     case .day6:
-        fatalError()
+        let solarSystem = SolarSystem.makeFromMap(solarMap)
+        print("number of orbits: \(solarSystem.allOrbits())")
+
+        guard
+            let start = solarSystem.planet("YOU")?.orbiting,
+            let end = solarSystem.planet("SAN")?.orbiting else {
+                print("unable to find start and end planets")
+                exit(1)
+        }
+
+        guard let path = solarSystem.path(from: start, to: end) else {
+            print("unable to build path from \(start.identifier) to \(end.identifier)")
+            exit(1)
+        }
+        print("number of transfers required: \(path.count - 1)")
+
 
 }
