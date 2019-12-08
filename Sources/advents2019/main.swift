@@ -3,6 +3,7 @@ import Day2
 import Day3
 import Day4
 import Day5
+import Day6
 import Foundation
 
 enum Option: String, Equatable {
@@ -12,6 +13,7 @@ enum Option: String, Equatable {
     case day3
     case day4
     case day5
+    case day6
 }
 
 let args = CommandLine.arguments.dropFirst()
@@ -72,5 +74,8 @@ case .day1:
 
         var program2 = Program(memory: programDay5, io: .values(input: [5], output: IO.stdout))
         program2.run()
+
+    case .day6:
+        fatalError()
 
 }
