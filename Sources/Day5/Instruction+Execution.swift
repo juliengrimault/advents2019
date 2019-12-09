@@ -3,7 +3,7 @@ import Foundation
 protocol Executable {
     var length: Int { get }
 
-    func execute(memory: inout Memory, io: inout IO) -> ExecutionResult
+    func execute(memory: inout Memory, io: IO) -> ExecutionResult
 }
 
 struct ExecutionResult {
@@ -43,20 +43,20 @@ extension Instruction: Executable {
         }
     }
 
-    func execute(memory: inout Memory, io: inout IO) -> ExecutionResult {
+    func execute(memory: inout Memory, io: IO) -> ExecutionResult {
         switch self {
         case let .add(add):
-            return add.execute(memory: &memory, io: &io)
+            return add.execute(memory: &memory, io: io)
         case let .mult(mult):
-            return mult.execute(memory: &memory, io: &io)
+            return mult.execute(memory: &memory, io: io)
         case let .read(read):
-            return read.execute(memory: &memory, io: &io)
+            return read.execute(memory: &memory, io: io)
         case let .write(write):
-            return write.execute(memory: &memory, io: &io)
+            return write.execute(memory: &memory, io: io)
         case let .jump(jump):
-            return jump.execute(memory: &memory, io: &io)
+            return jump.execute(memory: &memory, io: io)
         case let .comparison(comparison):
-            return comparison.execute(memory: &memory, io: &io)
+            return comparison.execute(memory: &memory, io: io)
         case .halt:
             return .halt
         }
@@ -66,7 +66,7 @@ extension Instruction: Executable {
 extension Add: Executable {
     var length: Int { 3 }
 
-    func execute(memory: inout Memory, io: inout IO) -> ExecutionResult {
+    func execute(memory: inout Memory, io: IO) -> ExecutionResult {
         let v1 = p1.value(memory: memory)
         let v2 = p2.value(memory: memory)
         memory[destination] = v1 + v2
@@ -78,7 +78,7 @@ extension Add: Executable {
 extension Mult: Executable {
     var length: Int { 3 }
 
-    func execute(memory: inout Memory, io: inout IO) -> ExecutionResult {
+    func execute(memory: inout Memory, io: IO) -> ExecutionResult {
         let v1 = p1.value(memory: memory)
         let v2 = p2.value(memory: memory)
         memory[destination] = v1 * v2
@@ -90,14 +90,8 @@ extension Mult: Executable {
 extension Read: Executable {
     var length: Int { 1 }
 
-    func execute(memory: inout Memory, io: inout IO) -> ExecutionResult {
-        guard
-            let value = io.input.read("Input value:") else {
-                print("unable to get value from input :(")
-                return .halt
-        }
-
-        memory[destination] = value
+    func execute(memory: inout Memory, io: IO) -> ExecutionResult {
+        memory[destination] = io.input()
 
         return .continue
     }
@@ -106,9 +100,9 @@ extension Read: Executable {
 extension Write: Executable {
     var length: Int { 1 }
 
-    func execute(memory: inout Memory, io: inout IO) -> ExecutionResult {
-        io.output.write(parameter.value(memory: memory))
-
+    func execute(memory: inout Memory, io: IO) -> ExecutionResult {
+        io.output(parameter.value(memory: memory))
+        
         return .continue
     }
 }
@@ -116,7 +110,7 @@ extension Write: Executable {
 extension Jump: Executable {
     var length: Int { 2 }
 
-    func execute(memory: inout Memory, io: inout IO) -> ExecutionResult {
+    func execute(memory: inout Memory, io: IO) -> ExecutionResult {
         let value = predicate.value(memory: memory)
         let predicateResult = isInverted ? value == 0 : value != 0
 
@@ -132,7 +126,7 @@ extension Jump: Executable {
 extension Comparison {
     var length: Int { 3 }
 
-    func execute(memory: inout Memory, io: inout IO) -> ExecutionResult {
+    func execute(memory: inout Memory, io: IO) -> ExecutionResult {
         let predicate = kind.predicate(memory: memory)
 
         let result = predicate(p1, p2) ? 1 : 0

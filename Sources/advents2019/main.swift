@@ -71,11 +71,13 @@ case .day1:
         print("Day 4 part 2 - number of passwords: \(count2)")
 
     case .day5:
-        var program = Program(memory: programDay5, io: .values(input: [1]))
-        program.run()
+        var program = Program(memory: programDay5)
+        let io: IO = valuesIO(input: [1])
+        program.run(io: io)
 
-        var program2 = Program(memory: programDay5, io: .values(input: [5]))
-        program2.run()
+        let io2: IO = valuesIO(input: [5])
+        var program2 = Program(memory: programDay5)
+        program2.run(io: io2)
 
     case .day6:
         let solarSystem = SolarSystem.makeFromMap(solarMap)
@@ -95,6 +97,9 @@ case .day1:
         print("number of transfers required: \(path.count - 1)")
 
     case .day7:
-        let max = maxOutput(for: programDay7, numberOfAmplifier: 5)
-        print("max thrust: \(String(describing: max))")
+        let maxLinear = maxLinearOutput(for: programDay7, numberOfAmplifier: 5)
+        print("max linear thrust: \(String(describing: maxLinear))")
+
+        let maxLoop = maxFeedbackLoopOutput(for: programDay7, phaseRange: 5..<10)
+        print("max feedback loop thrust: \(String(describing: maxLoop))")
 }

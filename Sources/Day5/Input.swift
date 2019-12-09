@@ -1,111 +1,65 @@
 import Foundation
 
-
 public struct IO {
     public var input: Input
     public var output: Output
 
-    public init(input: Input, output: Output) {
+    public init(input: @escaping Input, output: @escaping Output) {
         self.input = input
         self.output = output
     }
 }
 
-extension IO {
-    public static var interractive: IO {
-        let output = MultiplexOutput(IO.stdout, StoreOutput())
-        return IO(input: IO.stdin, output: output)
-    }
+public typealias Input = () -> Int
+public typealias Output = (Int) -> Void
 
-    public static func values(input: [Int], output: Output = MultiplexOutput(IO.stdout, StoreOutput())) -> IO {
-        return IO(input: ArbitraryInput(values: input), output: output)
-    }
+public let interractiveIO: IO = {
+    return IO(input: STDIN(), output: STDOUT())
+}()
+
+public func valuesIO(input: [Int], output: @escaping Output = STDOUT()) -> IO {
+    return IO(input: arbitraryInput(values: input), output: output)
 }
-
-
-public protocol Input {
-    mutating func read(_ message: String) -> Int?
-}
-
-public protocol Output {
-    mutating func write(_ value: Int)
-}
-
 
 /// Mark - Input Implementations
 
-extension IO {
-    public static var stdin: STDIN {
-        return STDIN()
-    }
-}
-
-public struct STDIN: Input {
-    public mutating func read(_ message: String) -> Int? {
-        print(message)
+public func STDIN() -> Input {
+    return {
         guard
             let line = readLine(),
             let value = Int(line) else {
                 print("input was not an integer")
-                return nil
+                fatalError()
         }
         return value
     }
 }
 
-public struct ArbitraryInput: Input {
-    public var values: [Int]
-
-    public init(values: [Int]) {
-        self.values = values
+public func arbitraryInput(values: [Int]) -> Input {
+    var v = values
+    return {
+        v.removeFirst()
     }
+}
 
-    public mutating func read(_ message: String) -> Int? {
-        guard let v = values.first else {
-            return nil
+
+public func prepend(values: [Int], to other: @escaping Input) -> Input {
+    var remaining = values
+    return {
+        if let v = remaining.first {
+            remaining.removeFirst()
+            return v
+        } else {
+            return other()
         }
-        values.removeFirst()
-        return v
     }
 }
 
 /// Mark - Output Implementation
 
-extension IO {
-    public static var stdout: STDOUT {
-        return STDOUT()
-    }
-}
-
-public struct STDOUT: Output {
-    public mutating func write(_ value: Int) {
+public func STDOUT() -> Output {
+    return { value in
         print(value)
     }
 }
 
-public struct StoreOutput: Output {
-    public private(set) var values: [Int]
-
-    public init() {
-        self.values = []
-    }
-
-   public mutating func write(_ value: Int) {
-    values.append(value)
-    }
-}
-
-public struct MultiplexOutput<O1, O2>: Output where O1: Output, O2: Output {
-    public var output1: O1
-    public var output2: O2
-
-    public init(_ o1: O1, _ o2: O2) {
-        self.output1 = o1
-        self.output2 = o2
-    }
-
-    mutating public func write(_ value: Int) {
-        output1.write(value)
-        output2.write(value)
-     }
-}

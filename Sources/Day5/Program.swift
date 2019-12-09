@@ -6,19 +6,17 @@ typealias Address = Int
 
 public struct Program {
     public var memory: Memory
-    public var io: IO
 
-    public init(memory: Memory, io: IO = .interractive) {
+    public init(memory: Memory) {
         self.memory = memory
-        self.io = io
     }
 
 
-    public mutating func run() {
+    public mutating func run(io: IO) {
         var instructionPointer = 0
 
         while let instruction = Instruction(memory: memory, at: instructionPointer) {
-            let result = instruction.execute(memory: &memory, io: &io)
+            let result = instruction.execute(memory: &memory, io: io)
             if result.finished {
                 return
             }

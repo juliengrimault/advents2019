@@ -76,9 +76,15 @@ final class Day5Tests: XCTestCase {
     }
 
     func assert(code: Memory, inputs: Int..., produce expected: [Int], file: StaticString = #file, line: UInt = #line) {
-        var p = Program(memory: code, io: .values(input: inputs, output: StoreOutput()))
-        p.run()
-        let outputs = (p.io.output as! StoreOutput).values
+        var p = Program(memory: code)
+
+        var outputs = [Int]()
+        let io = valuesIO(input: inputs) {
+            outputs.append($0)
+        }
+
+        p.run(io: io)
+
         XCTAssertEqual(outputs, expected, file: file, line: line)
     }
 }
