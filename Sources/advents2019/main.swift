@@ -5,6 +5,7 @@ import Day4
 import Day5
 import Day6
 import Day7
+import Day8
 import Foundation
 
 enum Option: String, Equatable {
@@ -16,6 +17,7 @@ enum Option: String, Equatable {
     case day5
     case day6
     case day7
+    case day8
 }
 
 let args = CommandLine.arguments.dropFirst()
@@ -102,4 +104,29 @@ case .day1:
 
         let maxLoop = maxFeedbackLoopOutput(for: programDay7, phaseRange: 5..<10)
         print("max feedback loop thrust: \(String(describing: maxLoop))")
+
+    case .day8:
+        let dimension = Day8.Dimension(width: 25, height: 6)
+        guard let image = try? SpaceImage(string: image1Data, dimension: dimension) else {
+            fatalError()
+        }
+        let mins0 = image.layers.enumerated().reduce(into: (idx: 0, count: Int.max)) { mins, pair in
+            let (idx, layer) = pair
+            let countOf0 = layer.pixels.filter { $0 == .black }.count
+            if countOf0 < mins.count {
+                mins = (idx, countOf0)
+            }
+        }
+
+        let onesAndTwos = image.layers[mins0.idx].pixels.reduce(into: (0,0)) { pair, pixel in
+            if pixel == .white {
+                pair.0 += 1
+            } else if pixel == .transparent {
+                pair.1 += 1
+            }
+        }
+        print("Layer with minimum of 0s = \(mins0.idx), n=\(onesAndTwos.0 * onesAndTwos.1)")
+
+        let flat = image.flatten()
+        print("\(flat)")
 }
