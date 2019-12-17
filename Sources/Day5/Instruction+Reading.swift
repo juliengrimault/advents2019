@@ -28,6 +28,8 @@ extension Instruction {
         case 8:
             let equal = Comparison.kind(.equal)
             self = .comparison(equal(memory, address))
+        case 9:
+            self = .adjustBase(AdjustBase(memory: memory, instructionAddress: address))
         case 99:
             self = .halt
         default:
@@ -40,30 +42,30 @@ extension Instruction {
 extension Add {
     init(memory: Memory, instructionAddress: Address) {
         let params = memory.buildParamters(count: 3, instructionAddress: instructionAddress)
-        guard let address = params[2].position else {
-            fatalError("Add - result parameter should always be in position mode")
+        guard params[2].isAddress else {
+            fatalError("Add instruction parameter 2 should be an address")
         }
-        self.init(p1: params[0], p2: params[1], destination: address)
+        self.init(p1: params[0], p2: params[1], destination: params[2])
     }
 }
 
 extension Mult {
     init(memory: Memory, instructionAddress: Address) {
         let params = memory.buildParamters(count: 3, instructionAddress: instructionAddress)
-        guard let address = params[2].position else {
-            fatalError("Add - result parameter should always be in position mode")
+        guard params[2].isAddress else {
+            fatalError("Mult instruction parameter 2 should be an address")
         }
-        self.init(p1: params[0], p2: params[1], destination: address)
+        self.init(p1: params[0], p2: params[1], destination: params[2])
     }
 }
 
 extension Read {
     init(memory: Memory, instructionAddress: Address) {
         let params = memory.buildParamters(count: 1, instructionAddress: instructionAddress)
-        guard let address = params[0].position else {
-            fatalError("Input instruction parameter should always be in position mode")
+        guard params[0].isAddress else {
+            fatalError("Read instruction parameter 0 should be an address")
         }
-        self.init(destination: address)
+        self.init(destination: params[0])
     }
 }
 
@@ -87,11 +89,18 @@ extension Comparison {
     static func kind(_ kind: Comparison.Kind) -> (Memory, Address) -> Comparison {
         return { memory, instructionAddress in
             let params = memory.buildParamters(count: 3, instructionAddress: instructionAddress)
-            guard let address = params[2].position else {
-                  fatalError("Comparison instruction result parameter (idx=3) should always be in position mode")
-              }
-            return Comparison(kind: kind, p1: params[0], p2: params[1], destination: address)
+            guard params[2].isAddress else {
+                fatalError("Comparison instruction parameter 2 should be an address")
+            }
+            return Comparison(kind: kind, p1: params[0], p2: params[1], destination: params[2])
         }
+    }
+}
+
+extension AdjustBase {
+    init(memory: Memory, instructionAddress: Address) {
+        let params = memory.buildParamters(count: 1, instructionAddress: instructionAddress)
+        self.init(adjustement: params[0])
     }
 }
 
@@ -110,6 +119,8 @@ extension Memory {
                     return .position(value)
                 case .immediate:
                     return .immediate(value)
+                case .relative:
+                    return .relative(value)
                 }
             }
     }

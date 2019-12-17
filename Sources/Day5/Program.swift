@@ -1,7 +1,5 @@
 import Foundation
 
-public typealias Memory = [Int]
-
 typealias Address = Int
 
 public struct Program {
@@ -14,16 +12,17 @@ public struct Program {
 
     public mutating func run(io: IO) {
         var instructionPointer = 0
+        var baseAddress = 0
 
         while let instruction = Instruction(memory: memory, at: instructionPointer) {
-            let result = instruction.execute(memory: &memory, io: io)
-            if result.finished {
-                return
-            }
+            let result = instruction.execute(memory: &memory, base: &baseAddress, io: io)
 
-            if let destination = result.jumpDestination {
+            switch result {
+            case .halt:
+                return
+            case let .jump(destination):
                 instructionPointer = destination
-            } else {
+            case .continue:
                 instructionPointer += instruction.length
             }
         }

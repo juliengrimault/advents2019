@@ -8,24 +8,25 @@ enum Instruction: Equatable {
     case write(Write) // write to IO
     case jump(Jump)
     case comparison(Comparison)
+    case adjustBase(AdjustBase)
     case halt
 }
 
 struct Add: Equatable {
     var p1: Parameter
     var p2: Parameter
-    var destination: Address
+    var destination: Parameter
 }
 
 struct Mult: Equatable {
     var p1: Parameter
     var p2: Parameter
-    var destination: Address
+    var destination: Parameter
 
 }
 
 struct Read: Equatable {
-    var destination: Address
+    var destination: Parameter
 }
 
 struct Write: Equatable {
@@ -46,5 +47,9 @@ struct Comparison: Equatable {
     var kind: Kind
     var p1: Parameter
     var p2: Parameter
-    var destination: Address
+    var destination: Parameter
+}
+
+struct AdjustBase: Equatable {
+    var adjustement: Parameter
 }

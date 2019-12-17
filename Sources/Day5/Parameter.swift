@@ -1,28 +1,43 @@
 import Foundation
 
 enum Parameter: Equatable {
+    // the parameter refers to an address in the program memory
     case position(Address)
+
+    // the parameter should be interepreted as the raw value
     case immediate(Int)
 
-    func value(memory: Memory) -> Int {
+    // the parameter is an offset from the base address
+    case relative(Int)
+
+    func value(memory: Memory, base: Address) -> Int {
         switch self {
         case let .position(address):
             return memory[address]
         case let .immediate(value):
             return value
+        case let .relative(offset):
+            return memory[base + offset]
         }
     }
-}
 
-extension Parameter {
-    var position: Address? {
-        get {
-            guard case let .position(value) = self else { return nil}
-            return value
+    func address(base: Address) -> Address? {
+        switch self {
+        case .immediate:
+            return nil
+        case let .position(address):
+            return address
+        case let .relative(offset):
+            return base + offset
         }
-        set {
-            guard case  .position = self, let value = newValue  else { return }
-            self = .position(value)
+    }
+
+    var isAddress: Bool {
+        switch self {
+        case .immediate:
+            return false
+        case .position, .relative:
+            return true
         }
     }
 }
@@ -30,6 +45,7 @@ extension Parameter {
 enum ParameterMode: Int {
     case position = 0
     case immediate = 1
+    case relative = 2
 }
 
 struct ParameterModes: Sequence {

@@ -3,7 +3,7 @@ import XCTest
 
 final class Day5Tests: XCTestCase {
 
-    let memory = [1002,4,3,4]
+    let memory = Memory([1002,4,3,4])
 
     func testParameterModeParsing() {
         let modes = ParameterModes(instruction: 1002)
@@ -19,57 +19,57 @@ final class Day5Tests: XCTestCase {
             .mult(Mult(
                 p1: .position(4),
                 p2: .immediate(3),
-                destination: 4
+                destination: .position(4)
             ))
         )
     }
 
     func testP1() {
-        let code = [3,9,8,9,10,9,4,9,99,-1,8]
+        let code = Memory([3,9,8,9,10,9,4,9,99,-1,8])
         assert(code: code, inputs: 7, produce: [0])
         assert(code: code, inputs: 8, produce: [1])
         assert(code: code, inputs: 9, produce: [0])
     }
 
     func testP2() {
-        let code = [3,9,7,9,10,9,4,9,99,-1,8]
+        let code = Memory([3,9,7,9,10,9,4,9,99,-1,8])
         assert(code: code, inputs: 7, produce: [1])
         assert(code: code, inputs: 8, produce: [0])
         assert(code: code, inputs: 9, produce: [0])
     }
 
     func testP3() {
-        let code = [3,3,1108,-1,8,3,4,3,99]
+        let code = Memory([3,3,1108,-1,8,3,4,3,99])
         assert(code: code, inputs: 7, produce: [0])
         assert(code: code, inputs: 8, produce: [1])
         assert(code: code, inputs: 9, produce: [0])
     }
 
     func testP4() {
-        let code = [3,3,1107,-1,8,3,4,3,99]
+        let code = Memory([3,3,1107,-1,8,3,4,3,99])
         assert(code: code, inputs: 7, produce: [1])
         assert(code: code, inputs: 8, produce: [0])
         assert(code: code, inputs: 9, produce: [0])
     }
 
     func testP5() {
-        let code = [3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9]
+        let code = Memory([3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9])
         assert(code: code, inputs: 0, produce: [0])
         assert(code: code, inputs: 8, produce: [1])
         assert(code: code, inputs: 9, produce: [1])
     }
 
     func testP6() {
-        let code = [3,3,1105,-1,9,1101,0,0,12,4,12,99,1]
+        let code = Memory([3,3,1105,-1,9,1101,0,0,12,4,12,99,1])
         assert(code: code, inputs: 0, produce: [0])
         assert(code: code, inputs: 8, produce: [1])
         assert(code: code, inputs: 9, produce: [1])
     }
 
     func testP7() {
-        let code = [3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
+        let code = Memory([3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
         1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
-        999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99]
+        999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99])
         assert(code: code, inputs: 0, produce: [999])
         assert(code: code, inputs: 8, produce: [1000])
         assert(code: code, inputs: 9, produce: [1001])

@@ -18,6 +18,7 @@ enum Option: String, Equatable {
     case day6
     case day7
     case day8
+    case day9
 }
 
 let args = CommandLine.arguments.dropFirst()
@@ -129,4 +130,15 @@ case .day1:
 
         let flat = image.flatten()
         print("\(flat)")
+
+    case .day9:
+        var p = Program(memory: day9Program)
+        print("part1:")
+        let io: IO = valuesIO(input: [1])
+        p.run(io: io)
+
+        var p2 = Program(memory: day9Program)
+        print("part2:")
+        let io2: IO = valuesIO(input: [2])
+        p2.run(io: io2)
 }
